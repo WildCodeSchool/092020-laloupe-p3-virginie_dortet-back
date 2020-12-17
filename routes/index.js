@@ -1,5 +1,6 @@
-const contactRoutes = require('./contacts');
+const router=require('express').Router();
+const emailRoutes = require('./email.routes');
 
-module.exports = (app) => {
-  app.use('/contacts', contactRoutes);
-};
+router.use('/emails', emailRoutes);
+
+module.exports = router;

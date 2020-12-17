@@ -1,9 +1,6 @@
-const db = require('../db.js');
+const { closeConnection } = require('../db_connection.js');
 const app = require('../app.js');
 
-const deleteAllDBData = async () => {
-  await db.deleteAllData();
-};
 const closeApp = () =>
   new Promise((resolve, reject) => {
     app.close((err) => {
@@ -12,9 +9,8 @@ const closeApp = () =>
     });
   });
 
-beforeAll(deleteAllDBData);
-afterEach(deleteAllDBData);
+
 afterAll(async () => {
-  await db.closeConnection();
+  await closeConnection();
   await closeApp();
 });
