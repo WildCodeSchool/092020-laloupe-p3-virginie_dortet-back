@@ -1,12 +1,11 @@
+'use strict';
 
-
-let dbm;
-let type;
-let seed;
-const fs = require('fs');
-const path = require('path');
-
-let Promise;
+var dbm;
+var type;
+var seed;
+var fs = require('fs');
+var path = require('path');
+var Promise;
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
@@ -20,11 +19,11 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  const filePath = path.join(__dirname, 'sqls', '20200601164349-initDB-up.sql');
+  var filePath = path.join(__dirname, 'sqls', '20201214163543-createImageTable-up.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
-      console.log(`received data: ${  data}`);
+      console.log('received data: ' + data);
 
       resolve(data);
     });
@@ -35,11 +34,11 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  const filePath = path.join(__dirname, 'sqls', '20200601164349-initDB-down.sql');
+  var filePath = path.join(__dirname, 'sqls', '20201214163543-createImageTable-down.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
-      console.log(`received data: ${  data}`);
+      console.log('received data: ' + data);
 
       resolve(data);
     });
