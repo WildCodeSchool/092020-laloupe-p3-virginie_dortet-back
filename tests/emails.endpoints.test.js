@@ -21,14 +21,14 @@ describe('emails', () => {
     // expect(parseInt(res.body.length, 10)).toEqual(0);
   });
 
-  it('POSTs /api/emails and should return the email created', async () => {
-    const res = await request(app)
-      .post('/api/emails')
-      // .send("Email")
-      .expect(201);
-    expect(res.body.id).toBe(1);
-    // expect(res.body.email).toEqual("fushi@gmail.com");
-  });
+  // it('POSTs /api/emails and should return the email created', async () => {
+  //   const res = await request(app)
+  //     .post('/api/emails')
+  //     // .send("Email")
+  //     .expect(201);
+  //   expect(res.body.id).toBe(1);
+  //   // expect(res.body.email).toEqual("fushi@gmail.com");
+  // });
 
   // it('POSTs /api/pictures and should return {name: "Honda_civic_9.jpg",description: "Best car in the world", dimension: 4000}', async () => {
   //   const res = await request(app)
