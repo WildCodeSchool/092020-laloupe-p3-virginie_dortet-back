@@ -2,13 +2,21 @@ const router=require('express').Router();
 const { connection }=require('../db_connection');
 
 
-// GET all of the Images from your table
+
+// GET all of the Images and filter with field Atelier
 router.get("/", (req, res) => {
-    const sql = 'SELECT * FROM Image'
+    const { filter, order } = req.query;
+    let sql = "SELECT * FROM Image";
+    if (filter === "Atelier") {
+        sql = `SELECT Id, Name, Alt, Atelier FROM Image WHERE Atelier=true`;
+        
+    } else if (order) {
+        sql += ` ORDER BY Name ${order}`;
+    } 
     connection.query(sql, (err, results) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Error retrieving the list of users");
+            res.status(500).send("Error retrieving the list of atelier's images");
         } else {
             res.status(200).json(results);
         }
