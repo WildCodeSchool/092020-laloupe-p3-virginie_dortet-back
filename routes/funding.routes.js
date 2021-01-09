@@ -52,18 +52,18 @@ router.get("/", (req, res) => {
             const { Name, Description, Link, Image_Name, Alt } = req.body;
             console.log(req.body);
 
-            let sql1 = "UPDATE Funding SET ? WHERE id=?";
+            const sql1 = "UPDATE Funding SET ? WHERE id=?";
             connection.query(sql1, [{Name, Description, Link}, id] , (errOne) => {
                 if (errOne) {
                     res.status(500).json({ error1: errOne.message });
                 } else {
                     
-                    let sql2 = "UPDATE Image SET ? WHERE Funding_id=?";
+                    const sql2 = "UPDATE Image SET ? WHERE Funding_id=?";
                     connection.query(sql2, [{Image_Name, Alt}, id], (errTwo) => {
                         if (errTwo) {
                             res.status(500).json({ error2: errTwo.message });
                         } else {
-                            let sql=`SELECT F.id, F.Name, F.Description, F.Link, I.Image_Name, I.Alt FROM Funding AS F JOIN Image AS I ON F.id = I.Funding_id WHERE F.id=${id}`;
+                            const sql=`SELECT F.id, F.Name, F.Description, F.Link, I.Image_Name, I.Alt FROM Funding AS F JOIN Image AS I ON F.id = I.Funding_id WHERE F.id=${id}`;
                             connection.query(sql, (errThree, resultThree) => {
                                 if (errThree) {
                                     res.status(500).json({ error3: errThree.message });
