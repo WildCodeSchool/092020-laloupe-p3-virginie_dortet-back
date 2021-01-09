@@ -4,15 +4,17 @@ const { sanitizeBook }=require('../models/livres');
 
 // GET all the books with its images
 router.get("/", (req, res) => {
+    // Selecting all the fields from Book and Image tables for all the Books
     const sql="SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, I.id AS ImageId, I.Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id ORDER BY B.id ASC";
     connection.query(sql, (err, result) => {
+        // Modifying the result send by mysql to get a list of books and for each book all of its images
         const books = sanitizeBook(result);
         if (err) {
             res.status(500).json({errorMessage: err.message});
         } else if (result.length === 0) {
             res.status(404).json({errorMessage: "Aucun livre n'a été trouvé."})
         } else {
-
+            // Displaying the list of books 
             res.status(200).json(books);
         }
     }); 
@@ -21,14 +23,17 @@ router.get("/", (req, res) => {
 // GET one Book with its images
 router.get("/:id", (req, res) => {
     const { id } = req.params;
+    // Selecting all the fields from Book and Image tables for one Book
     const sql = "SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, I.id AS ImageId, I.Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id WHERE B.id=?";
     connection.query(sql, [id], (err, result) => {
+        // Modifying the result send by mysql to get a list of objecf each containing a book, and for each book all of its images
         const books = sanitizeBook(result); 
         if (result.length === 0 || result === undefined) {
             res.status(404).json( { error: "Le livre n'existe pas."});
         } else if (err) {
                 res.status(500).send("Une erreur s'est produite lors de la récupération du livre.");
             } else {   
+                // Displaying the book
                 res.status(200).json(books);
                 }
             });
@@ -83,9 +88,9 @@ router.delete("/:id", (req, res) => {
     const idBook = req.params.id;
     connection.query('DELETE FROM Book WHERE id = ?', [idBook], (err) => {
         if (err) {
-            res.status(500).send("Error deleting a Book");
+            res.status(500).send("Une erreur s'est produite lors de la suppression du livre.");
         } else {
-            res.status(200).send(`Book ${idBook} deleted`);
+            res.status(200).send(`Le livre ${idBook} a été supprimé.`);
         }
     })
 })
