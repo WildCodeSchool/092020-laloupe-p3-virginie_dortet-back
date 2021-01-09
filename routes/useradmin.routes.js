@@ -1,8 +1,8 @@
 const router=require('express').Router();
+const bcrypt = require('bcrypt');
 const {connection}=require('../db_connection');
 const { createToken, authenticateWithJsonWebToken } = require("../services/jwt");
 
-const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 // Select the list of all the admin users but the result is not visible from others
@@ -52,8 +52,8 @@ router.post("/", (req, res) => {
           }
           else {
             const sql = "INSERT INTO User_Admin (Email, Password) VALUES (?, ?)"
-            //encryption of the password before insertion
-            bcrypt.hash(Password, saltRounds, function(err, hash) {
+            // encryption of the password before insertion
+            bcrypt.hash(Password, saltRounds, (err, hash) => {
               connection.query(sql,
                   [Email, hash],
                   (errTwo, resultTwo) => {
@@ -93,10 +93,10 @@ router.post("/login", (req, res) => {
             } else if (result.length === 0) {
                 res.status(400).json({errorMessage: "L'email est invalide"})
             } else {
-              //verify the password put by the user is the same as the one in the DB
+              // verify the password put by the user is the same as the one in the DB
               const verified = bcrypt.compareSync(Password, result[0].Password);
               if (verified) {
-                //create a token for the admin user
+                // create a token for the admin user
                 const token = createToken(result[0].id);
                 res.status(200).json({token});
               } else {
@@ -117,8 +117,8 @@ router.put('/:id', (req, res) => {
     } else {
         // Modifying the Email and the Password of a specific admin user
         let sql = "UPDATE User_Admin SET Email=?, Password=? WHERE id=?";
-        //Encryption of the password before insertion
-        bcrypt.hash(Password, saltRounds, function(err, hash) {
+        // Encryption of the password before insertion
+        bcrypt.hash(Password, saltRounds, (err, hash) => {
           connection.query(sql, [Email, hash, id], (errOne, resultOne) => {
               if(errOne) {
                   res.status(500).json({ errorMessage: errOne.message });

@@ -2,7 +2,7 @@ const router=require('express').Router();
 const {connection}=require('../db_connection');
 
 
-//Select all the emails of the clients 
+// Select all the emails of the clients 
 router.get("/", (req, res) => {
     const sql='SELECT * FROM Email';
     connection.query(sql, (err, result)=>{
