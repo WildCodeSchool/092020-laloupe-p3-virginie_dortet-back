@@ -5,7 +5,7 @@ const { sanitizeBook }=require('../models/livres');
 // GET all the books with its images
 router.get("/", (req, res) => {
     // Selecting all the fields from Book and Image tables for all the Books
-    const sql="SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, I.id AS ImageId, I.Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id ORDER BY B.id ASC";
+    const sql="SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, B.Link, I.id AS ImageId, I.Image_Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id ORDER BY B.id ASC";
     connection.query(sql, (err, result) => {
         // Modifying the result send by mysql to get a list of books and for each book all of its images
         const books = sanitizeBook(result);
@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
     const { id } = req.params;
     // Selecting all the fields from Book and Image tables for one Book
-    const sql = "SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, I.id AS ImageId, I.Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id WHERE B.id=?";
+    const sql = "SELECT B.id AS BookId, B.Title, B.Publication, B.Description, B.Price, B.Link, I.id AS ImageId, I.Image_Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id WHERE B.id=?";
     connection.query(sql, [id], (err, result) => {
         // Modifying the result send by mysql to get a list of objecf each containing a book, and for each book all of its images
         const books = sanitizeBook(result); 

@@ -1,7 +1,7 @@
 module.exports.sanitizeBook = result => {
   const books = [];
   result.forEach((item) => {
-    const { BookId, Description, Price, Publication, Title, ...image } = item;
+    const { BookId, Description, Price, Publication, Title, Link, ...image } = item;
     const bookExist = books.find((book) => book.BookId === item.BookId);
     if (!bookExist) {
       books.push({
@@ -10,6 +10,7 @@ module.exports.sanitizeBook = result => {
         Price,
         Publication,
         Title,
+        Link,
         Images: [image],
       });
     } else {
