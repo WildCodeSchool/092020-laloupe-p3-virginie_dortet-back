@@ -4,11 +4,9 @@ const { query } = require('../db_connection');
 
 describe('Test routes', () => {
     const testImage = {
-        "Name": "Les aventures de Kala 1",
+        "Image_Name": "Les aventures de Kala 1",
         "Alt": "CouvKala1",
-        "Atelier": 0,
-        "Description": "Couverture Kala 1",
-        "Device": "Mobile",
+        "Atelier": 0
     };
 
     beforeAll(async () => {
@@ -24,7 +22,7 @@ describe('Test routes', () => {
         .get('/api/images/2')
         .expect(404)
         .then(response => {
-            const expected = { error: 'User not found' };
+            const expected = { error: "L'image n'existe pas." };
             expect(response.body).toEqual(expected);
             done();
         })
@@ -35,7 +33,7 @@ describe('Test routes', () => {
         .expect(200)
         .then(response => {
             expect(response.body.id).toEqual(1);
-            expect(response.body.Name).toEqual("Les aventures de Kala 1");
+            expect(response.body.Image_Name).toEqual("Les aventures de Kala 1");
             done();
     })
     });
@@ -53,11 +51,9 @@ describe('Test routes', () => {
   });
 
   const postImage = {
-    "Name": "Les aventures de Kala 2",
+    "Image_Name": "Les aventures de Kala 2",
     "Alt": "CouvKala2",
-    "Atelier": 0,
-    "Description": "Couverture Kala 2",
-    "Device": "Desktop",
+    "Atelier": 0
     };
 
   it('POST /api/images send a status 201 and create a new image ', (done) => {
@@ -68,17 +64,15 @@ describe('Test routes', () => {
       .expect('Content-Type', /json/)
       .then(response => {
         expect(response.body.id).toEqual(2);
-        expect(response.body.Name).toEqual("Les aventures de Kala 2");
+        expect(response.body.Image_Name).toEqual("Les aventures de Kala 2");
         done();
       });
   });
 
     const updatedImage = {
-        "Name": "Les aventures extraordinaires de Kala 1",
+        "Image_Name": "Les aventures extraordinaires de Kala 1",
         "Alt": "CouvKala1",
-        "Atelier": 0,
-        "Description": "Couverture Kala 1",
-        "Device": "Mobile",
+        "Atelier": 0
     };
 
     it('PUT /api/images/:id send a status 201 and modify an existing image ', (done) => {
@@ -89,7 +83,7 @@ describe('Test routes', () => {
         .expect('Content-Type', /json/)
         .then(response => {
         expect(response.body.id).toEqual(1);
-        expect(response.body.Name).toEqual(updatedImage.Name);
+        expect(response.body.Image_Name).toEqual(updatedImage.Image_Name);
         done();
         });
     });
