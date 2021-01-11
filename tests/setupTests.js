@@ -1,4 +1,4 @@
-const { closeConnection } = require('../db_connection.js');
+const {closeConnection} = require('../db_connection.js');
 const app = require('../app.js');
 
 const closeApp = () =>

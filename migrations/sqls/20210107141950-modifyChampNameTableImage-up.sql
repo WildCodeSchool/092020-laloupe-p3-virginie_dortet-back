@@ -1,0 +1,2 @@
+ALTER TABLE Image
+RENAME COLUMN `Name` TO `Image_Name`;
