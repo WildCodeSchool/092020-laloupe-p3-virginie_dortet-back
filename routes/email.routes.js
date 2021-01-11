@@ -1,4 +1,5 @@
 const router=require('express').Router();
+const nodemailer = require("nodemailer");
 const {connection}=require('../db_connection');
 
 
@@ -66,6 +67,33 @@ router.post("/", (req, res) => {
     })
   }
 });
+
+// configuration of the email box that will send the email
+const transport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.emailAddressUsed,
+    pass: process.env.emailPassword
+  }
+})
+// Post un email pour formulaire email
+router.post("/envoi", (req, res) => {
+  const emailOptions = {
+    from: process.env.emailAddressUsed,
+    to: process.env.emailAddressToSend,
+    subject: "test send email with nodemailer",
+    text: `it's just a test to send email to ${req.body.name}`
+  };
+  transport.sendMail(emailOptions, (err, info) => {
+    if(err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json({info});
+    }
+  })
+})
   
 // Delete an email
 router.delete("/:id", (req, res) => {

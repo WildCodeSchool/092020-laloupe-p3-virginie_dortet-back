@@ -17,6 +17,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// to import images in a folder public/images
+app.use("/images", express.static("public/images"));
+
 // routes
 app.use('/api', mainRouter);
 
