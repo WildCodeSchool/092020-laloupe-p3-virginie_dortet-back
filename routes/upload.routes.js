@@ -9,10 +9,10 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
     // Configuration of the file where we will upload images and their names
     const storage = multer.diskStorage({
-        destination: (__, file, cb) => {
+        destination: (_, file, cb) => {
             cb(null, "public/images");
         },
-        filename: (__, file, cb) => {
+        filename: (_, file, cb) => {
             cb(null, `${Date.now()} - ${file.originalname}`);
         }     
     });
@@ -21,9 +21,10 @@ router.post("/", (req, res) => {
         if(err) {
             res.status(500).json(err);
         } else {
-            connection.query('INSERT INTO Image SET ?', [{name: req.file.filename, alt:"dsss"}], (errTwo) => {
+            connection.query('INSERT INTO Image SET ?', [{Image_Name: req.file.filename, Alt: req.file.filename}], (errTwo) => {
                 if(errTwo) {
-                    res.status(500).json(errTwo);
+                    res.status(500).json({errorMessage: errTwo.message});
+                    console.log(errTwo);
                 } else {
                     res.status(201).json({ filename: req.file.filename });
                 }
