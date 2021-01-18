@@ -8,7 +8,7 @@ function createToken(id) {
         { id },
         JWT_SECRET,
         {
-            expiresIn: 30
+            expiresIn: '1h',
         }
     );
     return token;
