@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // to import images in a folder public/images
-app.use("/images", express.static("public/images"));
+app.use("/public", express.static("public"));
 
 // routes
 app.use('/api', mainRouter);
