@@ -64,4 +64,34 @@ router.post("/livres", (req, res) => {
     })
 })
 
+
+
+router.post("/news", (req, res) => {
+    // Configuration of the file where we will upload images and their names
+    const storage = multer.diskStorage({
+        destination: (_, file, cb) => {
+            cb(null, "public/images");
+        },
+        filename: (_, file, cb) => {
+            cb(null, `${file.originalname}`);
+        }     
+    });
+    const upload = multer({storage}).single("file");
+    upload(req, res, (err) => {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            connection.query('INSERT INTO Image SET ?', [{Image_Name: req.file.filename, Alt: req.file.filename}], (errTwo) => {
+                if(errTwo) {
+                    res.status(500).json({errorMessage: errTwo.message});
+                    console.log(errTwo);
+                } else {
+                    res.status(201).json({ filename: req.file.filename });
+                }
+            })
+            
+        }
+    })
+})
+
 module.exports = router;

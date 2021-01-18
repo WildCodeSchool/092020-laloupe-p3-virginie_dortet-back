@@ -27,11 +27,12 @@ router.get("/", (_, res) => {
 
 
   router.post("/", (req, res) => {
-    const { Title, Description, Date, Address, Image_Name, Alt } = req.body;
+    const { Title, Description, Address, Image_Name, Alt } = req.body;
+    const myNewsDate=req.body.Date;
     const sqlOne="INSERT INTO News(Title, Description, Date, Address) VALUES(?, ?, ?, ?)";
-    connection.query(sqlOne,[Title, Description, Date, Address],(errOne,resultOne) => {
+    connection.query(sqlOne,[Title, Description,myNewsDate, Address],(errOne,resultOne) => {
         if (errOne) {
-          res.status(500).json("Error saving a news");
+          res.status(500).json({ error1: errOne.message });
         } else {
           const id = resultOne.insertId;
           const sqlTwo= "INSERT INTO Image(Image_Name,Alt,News_id) VALUES(?,?,?)";
@@ -92,6 +93,8 @@ router.get("/", (_, res) => {
     }
   });
 }
-});    
+});  
+
+
 
 module.exports=router;
