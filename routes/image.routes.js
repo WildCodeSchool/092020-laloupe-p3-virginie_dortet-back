@@ -1,6 +1,6 @@
 const router=require('express').Router();
+const multer = require("multer");
 const { connection }=require('../db_connection');
-
 
 
 // Retrieve all the images and possibility to filter images specific to Ateliers Créatifs
@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
     // Filter images specific to Ateliers créatifs
     let sql = "SELECT * FROM Image";
     if (filter === "Atelier") {
-        sql = `SELECT Id, Name, Alt, Atelier FROM Image WHERE Atelier=true`;
+        sql = `SELECT Id, Image_Name, Alt, Atelier FROM Image WHERE Atelier=true`;
     // Ordering images by ASC or DESC order
     } else if (order) {
         sql += ` ORDER BY Name ${order}`;
@@ -64,6 +64,35 @@ router.post('/', (req, res) => {
         })
     })
 })
+
+router.post("/livres", (req, res) => {
+    // Configuration of the file where we will upload images and their names
+    const storage = multer.diskStorage({
+        destination: (_, file, cb) => {
+            cb(null, "public/images");
+        },
+        filename: (_, file, cb) => {
+            cb(null, `${Date.now()} - ${file.originalname}`);
+        }     
+    });
+    const upload = multer({storage}).single("file");
+    upload(req, res, (err) => {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            connection.query('INSERT INTO Image SET ?', [{Image_Name: req.file.filename, Alt: req.file.filename}], (errTwo) => {
+                if(errTwo) {
+                    res.status(500).json({errorMessage: errTwo.message});
+                    console.log(errTwo);
+                } else {
+                    res.status(201).json({ filename: req.file.filename });
+                }
+            })
+            
+        }
+    })
+})
+
 
 // PUT Modify an existing image
 router.put("/:id", (req, res) => {

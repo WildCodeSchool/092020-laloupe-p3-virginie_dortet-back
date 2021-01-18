@@ -2,6 +2,7 @@ const router=require('express').Router();
 const { connection }=require('../db_connection');
 const { sanitizeBook }=require('../models/livres');
 
+
 // GET all the books with its images
 router.get("/", (req, res) => {
     // Selecting all the fields from Book and Image tables for all the Books
@@ -40,25 +41,53 @@ router.get("/:id", (req, res) => {
 });
 
 // POST Insert a new Book
-router.post('/', (req, res) => {
-    return connection.query('INSERT INTO Book SET ?', req.body, (err, results) => {
+// router.post('/', (req, res) => {
+//     return connection.query('INSERT INTO Book SET ?', req.body, (err, results) => {
+//         if (err) {
+//             return res.status(500).json({
+//                 error: err.message,
+//                 sql: err.sql
+//             });
+//         }
+//         return connection.query('SELECT * FROM Book WHERE id = ?', results.insertId, (err2, records) => {
+//             if (err2) {
+//                 return res.status(500).json({
+//                     error: err2.message,
+//                     sql: err2.sql,
+//                 });
+//             }
+//             return res.status(201).json(records[0]);
+//         })
+//     })
+// })
+
+// POST Insert a Book with its images
+router.post("/", (req, res) => {
+    const { Title, Publication, Description, Price, Link, Images } = req.body;
+    const sql = "INSERT INTO Book (Title, Description, Price, Link, Publication) VALUES (?, ?, ?, ?, ?)";
+    connection.query(sql, [Title, Description, Price, Link, Publication], (err, result) => {
         if (err) {
-            return res.status(500).json({
-                error: err.message,
-                sql: err.sql
-            });
-        }
-        return connection.query('SELECT * FROM Book WHERE id = ?', results.insertId, (err2, records) => {
-            if (err2) {
-                return res.status(500).json({
-                    error: err2.message,
-                    sql: err2.sql,
+            res.status(500).json({ errorMessage: err.message });
+        } else {
+            const id = result.insertId;
+            const sql2 = `INSERT INTO Image (Alt, Image_Name, Book_id) VALUES (?, ?, ?)`;
+            console.log(Images);
+            Images.forEach(image => {
+                connection.query(sql2, [image.alt, image.img, id], () => {
                 });
-            }
-            return res.status(201).json(records[0]);
-        })
-    })
-})
+
+            })
+            const sql3 = "SELECT B.id AS BookId, B.Title, I.id AS ImageId, I.Image_Name, I.Alt FROM Book as B JOIN Image as I ON B.id=I.Book_id WHERE B.id=LAST_INSERT_ID()";
+            connection.query(sql3, (errTwo, record) => {
+                if (errTwo) {
+                    res.status(500).json({error: errTwo.message})
+                } else {
+                    res.status(201).json(record);
+                }
+            })
+        }
+    });
+});
 
 // PUT Modify an existing Book
 router.put("/:id", (req, res) => {
