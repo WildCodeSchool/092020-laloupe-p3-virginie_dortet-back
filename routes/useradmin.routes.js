@@ -1,12 +1,12 @@
 const router=require('express').Router();
 const bcrypt = require('bcrypt');
 const {connection}=require('../db_connection');
-const { createToken} = require("../services/jwt");
+const { createToken, authenticateWithJsonWebToken } = require("../services/jwt");
 
 const saltRounds = 10;
 
 // Select the list of all the admin users but the result is not visible from others
-router.get("/", (req, res) => {
+router.get("/", authenticateWithJsonWebToken, (req, res) => {
     const sql='SELECT * FROM User_Admin';
     connection.query(sql, (err, result)=>{
         if (err){
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 });
 
 // Select the list of one admin but the result is not visible from others
-router.get("/:id", (req, res) => {
+router.get("/:id", authenticateWithJsonWebToken, (req, res) => {
     const {id} = req.params;
     const sql='SELECT * from User_Admin WHERE id=?';
     connection.query(
@@ -39,7 +39,7 @@ router.get("/:id", (req, res) => {
 });
 
   // Adding a new admin user 
-router.post("/", (req, res) => {
+router.post("/", authenticateWithJsonWebToken, (req, res) => {
     const { Email, Password } = req.body;
     if (!Email || !Password) {
       res.status(400).json({ errorMessage: "Merci de renseigner toutes les informations."});
@@ -108,7 +108,7 @@ router.post("/login", (req, res) => {
 })
   
 // Modify the email and the password of an existing Admin User
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticateWithJsonWebToken, (req, res) => {
     const { id } = req.params;
     const { Email, Password } = req.body;
     // Verifying that both email and password have been provided
@@ -142,7 +142,7 @@ router.put('/:id', (req, res) => {
 })
 
 // Deleting an admin user 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
     const { id } = req.params;
     connection.query(
       "DELETE FROM User_Admin WHERE id = ?",
