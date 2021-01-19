@@ -1,12 +1,12 @@
 const router=require('express').Router();
 const bcrypt = require('bcrypt');
 const {connection}=require('../db_connection');
-const { createToken, authenticateWithJsonWebToken } = require("../services/jwt");
+const { createToken} = require("../services/jwt");
 
 const saltRounds = 10;
 
 // Select the list of all the admin users but the result is not visible from others
-router.get("/", authenticateWithJsonWebToken, (req, res) => {
+router.get("/", (req, res) => {
     const sql='SELECT * FROM User_Admin';
     connection.query(sql, (err, result)=>{
         if (err){
@@ -19,7 +19,7 @@ router.get("/", authenticateWithJsonWebToken, (req, res) => {
 });
 
 // Select the list of one admin but the result is not visible from others
-router.get("/:id", authenticateWithJsonWebToken, (req, res) => {
+router.get("/:id", (req, res) => {
     const {id} = req.params;
     const sql='SELECT * from User_Admin WHERE id=?';
     connection.query(
