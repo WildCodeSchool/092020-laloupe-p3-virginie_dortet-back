@@ -94,7 +94,6 @@ router.post("/news", (req, res) => {
     })
 })
 
-
 router.post("/fundings", (req, res) => {
     // Configuration of the file where we will upload images and their names
     const storage = multer.diskStorage({
