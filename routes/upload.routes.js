@@ -116,7 +116,8 @@ router.post("/fundings", (req, res) => {
                 } else {
                     res.status(201).json({ filename: req.file.filename });
                 }
-            }) 
+            })
+            
         }
     })
 })
