@@ -19,7 +19,7 @@ const transport = nodemailer.createTransport({
   router.post("/", (req, res) => {
     let livreString = "";
     req.body.livreschoisis.map(els => {
-      livreString = `${livreString  }- ${ els.Title  } x ${  els.number  }\n`;
+      livreString = `${livreString  }- ${ els.Title  } x ${  els.number  } livres \n `;
       return els;
     })
 
