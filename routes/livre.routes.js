@@ -1,6 +1,7 @@
 const router=require('express').Router();
 const { connection }=require('../db_connection');
 const { sanitizeBook }=require('../models/livres');
+const { authenticateWithJsonWebToken } = require("../services/jwt");
 
 
 // GET all the books with its images
@@ -40,29 +41,8 @@ router.get("/:id", (req, res) => {
             });
 });
 
-// POST Insert a new Book
-// router.post('/', (req, res) => {
-//     return connection.query('INSERT INTO Book SET ?', req.body, (err, results) => {
-//         if (err) {
-//             return res.status(500).json({
-//                 error: err.message,
-//                 sql: err.sql
-//             });
-//         }
-//         return connection.query('SELECT * FROM Book WHERE id = ?', results.insertId, (err2, records) => {
-//             if (err2) {
-//                 return res.status(500).json({
-//                     error: err2.message,
-//                     sql: err2.sql,
-//                 });
-//             }
-//             return res.status(201).json(records[0]);
-//         })
-//     })
-// })
-
 // POST Insert a Book with its images
-router.post("/", (req, res) => {
+router.post("/", authenticateWithJsonWebToken, (req, res) => {
     const { Title, Publication, Description, Price, Link, Images } = req.body;
     const sql = "INSERT INTO Book (Title, Description, Price, Link, Publication) VALUES (?, ?, ?, ?, ?)";
     connection.query(sql, [Title, Description, Price, Link, Publication], (err, result) => {
@@ -90,7 +70,7 @@ router.post("/", (req, res) => {
 });
 
 // PUT Modify an existing Book
-router.put("/:id", (req, res) => {
+router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
     const idBook = req.params.id;
     const updatedBook = req.body;
     return connection.query('UPDATE Book SET ? WHERE id = ?', [updatedBook, idBook], (err) => {
@@ -113,7 +93,7 @@ router.put("/:id", (req, res) => {
 })
 
 // DELETE Delete a Book
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
     const idBook = req.params.id;
     connection.query('DELETE FROM Book WHERE id = ?', [idBook], (err) => {
         if (err) {
