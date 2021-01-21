@@ -1,5 +1,7 @@
 const router=require('express').Router();
 const {connection}=require('../db_connection');
+const { authenticateWithJsonWebToken } = require("../services/jwt");
+
 
 router.get("/", (_, res) => {
     const sql='SELECT N.id,N.Title,N.Description,N.Date,N.Address,I.Image_Name,I.Alt FROM News AS N JOIN Image AS I ON N.id=I.News_id ORDER BY Date DESC';
@@ -26,7 +28,7 @@ router.get("/", (_, res) => {
     });
 
 
-  router.post("/", (req, res) => {
+  router.post("/", authenticateWithJsonWebToken, (req, res) => {
     const { Title, Description, Address, Image_Name, Alt } = req.body;
     const myNewsDate=req.body.Date;
     const sqlOne="INSERT INTO News(Title, Description, Date, Address) VALUES(?, ?, ?, ?)";
@@ -49,7 +51,7 @@ router.get("/", (_, res) => {
     );
   });
 
-  router.put("/:id", (req, res) => {
+  router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
     const {id} = req.params;
     const {Title,Description,Date,Address,Image_Name,Alt} = req.body;
     const sql1="UPDATE News SET ? WHERE id = ?";
@@ -76,7 +78,7 @@ router.get("/", (_, res) => {
 });
 });
 
-  router.delete("/:id", (req, res) => {
+  router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
     const {id} = req.params;
     if (Number.isNaN(parseInt(id, 10))) {
       res.status(400).json({ errorMessage: " You must provided an valid ID !" });
