@@ -7,9 +7,18 @@ const mainRouter = require('./routes');
 const app = express();
 
 // pre-route middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// to import images in a folder public/images
+app.use("/public", express.static("public"));
 
 // routes
 app.use('/api', mainRouter);
