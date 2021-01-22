@@ -1,7 +1,6 @@
 const router=require('express').Router();
 const { connection }=require('../db_connection');
 const { sanitizeBook }=require('../models/livres');
-const { authenticateWithJsonWebToken } = require("../services/jwt");
 
 
 // GET all the books with its images
@@ -42,7 +41,7 @@ router.get("/:id", (req, res) => {
 });
 
 // POST Insert a Book with its images
-router.post("/", authenticateWithJsonWebToken, (req, res) => {
+router.post("/", (req, res) => {
     const { Title, Publication, Description, Price, Link, Images } = req.body;
     const sql = "INSERT INTO Book (Title, Description, Price, Link, Publication) VALUES (?, ?, ?, ?, ?)";
     connection.query(sql, [Title, Description, Price, Link, Publication], (err, result) => {
@@ -70,7 +69,7 @@ router.post("/", authenticateWithJsonWebToken, (req, res) => {
 });
 
 // PUT Modify an existing Book
-router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
+router.put("/:id", (req, res) => {
     const idBook = req.params.id;
     const updatedBook = req.body;
     return connection.query('UPDATE Book SET ? WHERE id = ?', [updatedBook, idBook], (err) => {
@@ -93,7 +92,7 @@ router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
 })
 
 // DELETE Delete a Book
-router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
+router.delete("/:id", (req, res) => {
     const idBook = req.params.id;
     connection.query('DELETE FROM Book WHERE id = ?', [idBook], (err) => {
         if (err) {

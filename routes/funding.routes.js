@@ -1,6 +1,5 @@
 const router=require('express').Router();
 const {connection}=require('../db_connection');
-const { authenticateWithJsonWebToken } = require("../services/jwt");
 
 
 router.get("/", (req, res) => {
@@ -27,7 +26,7 @@ router.get("/", (req, res) => {
     });
 });
 
-  router.post("/", authenticateWithJsonWebToken, (req, res) => {
+  router.post("/", (req, res) => {
     const { Name, Description, Link, Image_Name, Alt } = req.body;    
     const sql1 = "INSERT INTO Funding (Name, Description, Link) VALUES (?, ?, ?)";
     connection.query(sql1, [Name, Description, Link] , (errOne, resultOne) => {
@@ -48,7 +47,7 @@ router.get("/", (req, res) => {
 });
 
 
-        router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
+        router.put("/:id", (req, res) => {
             const { id } = req.params;
             const { Name, Description, Link, Image_Name, Alt } = req.body;
             console.log(req.body);
@@ -80,7 +79,7 @@ router.get("/", (req, res) => {
         })
 
 
-  router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
+  router.delete("/:id", (req, res) => {
     const { id } = req.params;
     if (Number.isNaN(parseInt(id, 10))) {
         res.status(400).json({ errorMessage: " You must provided an valid ID !" });
