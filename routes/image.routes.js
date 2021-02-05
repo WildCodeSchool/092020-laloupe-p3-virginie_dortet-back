@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
 const { connection } = require("../db_connection");
-const { authenticateWithJsonWebToken } = require("../services/jwt");
 
 // Retrieve all the images and possibility to filter images specific to Ateliers Créatifs
 router.get("/", (req, res) => {
@@ -52,7 +51,7 @@ router.get("/:id", (req, res) => {
 });
 
 // POST Insert a new image
-router.post("/", authenticateWithJsonWebToken, (req, res) => {
+router.post("/", (req, res) => {
   return connection.query(
     "INSERT INTO Image SET ?",
     req.body,
@@ -112,7 +111,7 @@ router.post("/livres", (req, res) => {
 });
 
 // PUT Modify an existing image
-router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
+router.put("/:id", (req, res) => {
   const idImage = req.params.id;
   const updatedImage = req.body;
   return connection.query(
@@ -143,7 +142,7 @@ router.put("/:id", authenticateWithJsonWebToken, (req, res) => {
 });
 
 // DELETE Delete an image
-router.delete("/:id", authenticateWithJsonWebToken, (req, res) => {
+router.delete("/:id", (req, res) => {
   const idImage = req.params.id;
   connection.query("DELETE FROM Image WHERE id = ?", [idImage], (err) => {
     if (err) {

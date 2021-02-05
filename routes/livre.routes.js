@@ -46,6 +46,7 @@ router.get("/:id", (req, res) => {
 
 // POST Insert a Book with its images
 router.post("/", authenticateWithJsonWebToken, (req, res) => {
+  console.log("hello");
   const { Title, Publication, Description, Price, Link, Images } = req.body;
   const sql =
     "INSERT INTO Book (Title, Description, Price, Link, Publication) VALUES (?, ?, ?, ?, ?)";
